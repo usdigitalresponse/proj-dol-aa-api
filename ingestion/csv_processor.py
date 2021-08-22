@@ -1,19 +1,30 @@
 import csv
 import validators
+import codecs
 
 
 class CSVProcessor:
     def __init__(self):
         pass
 
-    def ingest(self, filepath: str):
+    def ingest(self, filepath: str = "", body=None):
         """Ingest CSV, validate, and store into database.
 
         Expected CSV schema:
 
         email | bob@gmail.com | email address of claimant
         weeks | 2020-W01 2020-W10 | space separated year and ISO 8601 week date
+
+        Takes in either a filepath or a body from s3 of type botocore.response.StreamingBody
         """
+        if filepath:
+            return self._ingest_from_filepath(filepath)
+        if body:
+            return self._ingest_from_s3(body)
+
+        return False
+
+    def _ingest_from_filepath(self, filepath: str):
         try:
             with open(filepath, newline="\n") as csvfile:
                 reader = csv.reader(csvfile, delimiter=",")
@@ -32,3 +43,22 @@ class CSVProcessor:
 
         except:
             raise Exception("Error ingesting csv: {}".format(filepath))
+
+    def _ingest_from_s3(self, body):
+        try:
+            row_number = 1
+            for row in csv.DictReader(
+                codecs.getreader("utf-8")(body), fieldnames=["email", "weeks"]
+            ):
+                email, weeks = row["email"], row["weeks"]
+                if not validators.is_valid_email(email):
+                    # TODO: process errors.
+                    continue
+                if not validators.is_valid_weeks(weeks):
+                    # TODO: process errors.
+                    continue
+                row_number += 1
+
+            # TODO: insert row into database.
+        except:
+            raise Exception("Error ingesting csv")
