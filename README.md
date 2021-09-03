@@ -17,3 +17,6 @@ If you are having issues with detecting local imports in Python
 - Copy token and run `echo "export SENDGRID_API_KEY='YOUR_API_KEY'" > sendgrid.env`
 - Run `source ./sendgrid.env`.
 - You can test whether this is working by replacing the recipients email in `tests/tests.py -> test_sengrid_client` with your email and running it.
+
+### Bundling Lambdas
+- To bundle the ingestion lambda to upload to the console, run `./bundle_ingestion_lambda.sh` from project root, and upload the resulting `ui-ingestion-lambda.zip` in the AWS lambda console.

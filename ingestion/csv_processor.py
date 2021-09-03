@@ -1,5 +1,5 @@
 import csv
-import validators
+import ingestion.validators as validators
 import codecs
 
 
@@ -40,7 +40,7 @@ class CSVProcessor:
                     row_number += 1
 
                 # TODO: insert row into database.
-
+                print("Rows processed: " + str(row_number))
         except:
             raise Exception("Error ingesting csv: {}".format(filepath))
 
@@ -60,5 +60,6 @@ class CSVProcessor:
                 row_number += 1
 
             # TODO: insert row into database.
+            print("Rows processed: " + str(row_number))
         except:
             raise Exception("Error ingesting csv")
