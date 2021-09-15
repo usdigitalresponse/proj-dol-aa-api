@@ -4,6 +4,7 @@ boto3==1.18.26
 botocore==1.21.26
 click==8.0.1
 jmespath==0.10.0
+jotform @ git+git://github.com/jotform/jotform-api-python.git@0acd01f2103181dca50da52cacbfd6b9e203cddf
 mypy-extensions==0.4.3
 pathspec==0.9.0
 python-dateutil==2.8.2

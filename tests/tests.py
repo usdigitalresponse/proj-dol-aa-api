@@ -1,5 +1,6 @@
 from clients.notification.sendgrid_client import SendGridClient
 from clients.notification.notification_client import EmailArgs
+from clients.form.jotform_client import JotformClient
 import os
 
 
@@ -33,6 +34,11 @@ def test_sengrid_client():
 
     email_args = EmailArgs(recipient_emails, subject, html_content)
     sendgrid_client.send(email_args=email_args)
+
+
+def test_jotform_client():
+    token = os.getenv("JOTFORM_API_KEY")
+    jotform_client = JotformClient(token)
 
 
 def test_notification_client():
