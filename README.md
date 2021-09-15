@@ -18,5 +18,9 @@ If you are having issues with detecting local imports in Python
 - Run `source ./sendgrid.env`.
 - You can test whether this is working by replacing the recipients email in `tests/tests.py -> test_sengrid_client` with your email and running it.
 
+### RDS Setup
+- Talk to Advith to get contents of `rds.env` file
+- Place `rds.env` file in project root and run `source ./rds.env`
+
 ### Bundling Lambdas
 - To bundle the ingestion lambda to upload to the console, run `./bundle_ingestion_lambda.sh` from project root, and upload the resulting `ui-ingestion-lambda.zip` in the AWS lambda console.

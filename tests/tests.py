@@ -2,6 +2,8 @@ from clients.notification.sendgrid_client import SendGridClient
 from clients.notification.notification_client import EmailArgs
 from clients.form.jotform_client import JotformClient
 import os
+from ingestion.csv_processor import CSVProcessor
+from database.db_connection import DatabaseConnection
 
 
 def test_end_to_end():
@@ -45,5 +47,18 @@ def test_notification_client():
     pass
 
 
+def test_ingestion():
+    """
+    Ingest rows from a CSV file into test database.
+    """
+
+    csv_processor = CSVProcessor(use_db_connection=True)
+    csv_processor.ingest(filepath="test_claims.csv")
+
+    db_connection = DatabaseConnection()
+    db_connection.print_all_rows()
+    # db_connection.clear_table()
+
+
 if __name__ == "__main__":
-    test_sengrid_client()
+    test_ingestion()
