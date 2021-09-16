@@ -7,6 +7,7 @@ jmespath==0.10.0
 jotform @ git+git://github.com/jotform/jotform-api-python.git@0acd01f2103181dca50da52cacbfd6b9e203cddf
 mypy-extensions==0.4.3
 pathspec==0.9.0
+PyMySQL==1.0.2
 python-dateutil==2.8.2
 python-http-client==3.3.2
 regex==2021.8.3
