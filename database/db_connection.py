@@ -48,5 +48,19 @@ class DatabaseConnection:
         self.conn.commit()
         cur.close()
 
+    def reset_table(self):
+        with self.conn.cursor() as cur:
+            cur.execute("DROP TABLE IF EXISTS claims")
+            cur.execute(
+                """
+                CREATE TABLE claims (
+                    email VARCHAR(100) NOT NULL,
+                    PRIMARY KEY (email)
+                )
+                """
+            )
+        self.conn.commit()
+        cur.close()
+
     def close(self):
         self.conn.close()
