@@ -6,10 +6,8 @@ from models.claim import Claim
 
 
 class CSVProcessor:
-    def __init__(self, use_db_connection=False):
-        self.db_connection = None
-        if use_db_connection:
-            self.db_connection = DatabaseConnection(is_test=True)
+    def __init__(self, db_connection=None):
+        self.db_connection = db_connection
 
     def ingest(self, filepath: str = "", body=None):
         """Ingest CSV, validate, and store into database.
@@ -33,7 +31,7 @@ class CSVProcessor:
             claims = []
             with open(filepath, newline="\n") as csvfile:
                 reader = csv.reader(csvfile, delimiter=",")
-                row_number = 1
+                row_number = 0
                 for row in reader:
                     email, weeks = row
                     if not validators.is_valid_email(email):
@@ -58,7 +56,7 @@ class CSVProcessor:
     def _ingest_from_s3(self, body):
         try:
             claims = []
-            row_number = 1
+            row_number = 0
             for row in csv.DictReader(
                 codecs.getreader("utf-8")(body), fieldnames=["email", "weeks"]
             ):

@@ -7,6 +7,7 @@ from ingestion.csv_processor import CSVProcessor
 import boto3
 import urllib.parse
 import json
+from database.db_connection import DatabaseConnection
 
 IMPORTS_BUCKET = "ui-claimant-imports"
 
@@ -24,8 +25,12 @@ def lambda_handler(event, context):
         response = s3.get_object(Bucket=bucket, Key=key)
         body = response["Body"]  # botocore.response.StreamingBody
 
-        csv_processor = CSVProcessor()
+        db_connection = DatabaseConnection(is_test=False)
+
+        csv_processor = CSVProcessor(db_connection)
         csv_processor.ingest(body=body)
+
+        db_connection.close()
 
         return {
             "statusCode": 200,

@@ -4,6 +4,7 @@ from clients.form.jotform_client import JotformClient
 import os
 from ingestion.csv_processor import CSVProcessor
 from database.db_connection import DatabaseConnection
+from models.claim import Claim
 
 
 def test_end_to_end():
@@ -51,13 +52,17 @@ def test_ingestion():
     """
     Ingest rows from a CSV file into test database.
     """
+    db_connection = DatabaseConnection()
+    db_connection.clear_table()
 
-    csv_processor = CSVProcessor(use_db_connection=True)
+    csv_processor = CSVProcessor(db_connection)
     csv_processor.ingest(filepath="test_claims.csv")
 
-    db_connection = DatabaseConnection()
-    db_connection.print_all_rows()
-    # db_connection.clear_table()
+    rows = db_connection.fetch_all_rows(lambda row: Claim(row["email"], ""))
+    assert len(rows) == 3
+
+    db_connection.clear_table()
+    db_connection.close()
 
 
 if __name__ == "__main__":
