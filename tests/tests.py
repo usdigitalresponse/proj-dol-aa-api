@@ -4,7 +4,8 @@ from clients.form.jotform_client import JotformClient
 import os
 from ingestion.csv_processor import CSVProcessor
 from database.db_connection import DatabaseConnection
-from models.claim import Claim
+from models.claim import Claim, unpacking_func
+from utils.processing_helpers import process_claim
 
 
 def test_end_to_end():
@@ -58,12 +59,45 @@ def test_ingestion():
     csv_processor = CSVProcessor(db_connection)
     csv_processor.ingest(filepath="test_claims.csv")
 
-    rows = db_connection.fetch_all_rows(lambda row: Claim(row["email"], ""))
+    rows = db_connection.fetch_all_rows(unpacking_func)
     assert len(rows) == 3
 
     db_connection.clear_table()
     db_connection.close()
 
 
+def test_processing():
+    """
+    Test pulling for unprocessed rows and processing them.
+    """
+    db_connection = DatabaseConnection()
+    db_connection.clear_table()
+
+    # Setup SendGrid client.
+    token = os.getenv("SENDGRID_API_KEY")
+    from_email = "ui-fact-finding@usdigitalresponse.org"
+    sendgrid_client = SendGridClient(token, from_email)
+
+    # Seed database with fake rows.
+    csv_processor = CSVProcessor(db_connection)
+    csv_processor.ingest(filepath="test_claims_real.csv")
+
+    # Fetch unprocessed rows.
+    claims = db_connection.fetch_unprocessed_rows(unpacking_func)
+    assert len(claims) == 2
+
+    # Process rows.
+    for claim in claims:
+        email_args = EmailArgs(
+            [claim.email],
+            "[TEST] Fill out UI Form",
+            "",
+        )
+        process_claim(db_connection, claim, sendgrid_client, email_args)
+
+    db_connection.clear_table()
+    db_connection.close()
+
+
 if __name__ == "__main__":
-    test_ingestion()
+    test_processing()
