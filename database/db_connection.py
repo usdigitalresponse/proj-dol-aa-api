@@ -1,6 +1,5 @@
 import pymysql
 import os
-from models.claim import Claim
 
 rds_host = os.getenv("RDS_HOST")
 name = os.getenv("RDS_USERNAME")
@@ -25,11 +24,7 @@ class DatabaseConnection:
 
     def write_row(self, model):
         with self.conn.cursor() as cur:
-            cur.execute(
-                "INSERT INTO {} VALUES {}".format(
-                    table_name, model.to_insert_values_statement()
-                )
-            )
+            cur.execute(model.to_sql_insert_statement(table_name))
         self.conn.commit()
         cur.close()
 
@@ -54,7 +49,18 @@ class DatabaseConnection:
             cur.execute(
                 """
                 CREATE TABLE claims (
-                    email VARCHAR(100) NOT NULL,
+                    email VARCHAR(256) NOT NULL,
+                    weeks VARCHAR(1024) NOT NULL,
+
+                    form_url VARCHAR(256),
+                    is_delivered_successfully TINYINT(1),
+                    email_attempted_at DATETIME(6),
+                    response_received_at DATETIME(6),
+                    response BLOB,
+
+                    created_at DATETIME(6),
+                    updated_at DATETIME(6),
+
                     PRIMARY KEY (email)
                 )
                 """
