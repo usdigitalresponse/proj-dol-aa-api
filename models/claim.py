@@ -1,3 +1,6 @@
+import datetime
+
+
 class Claim:
     def __init__(self, email, weeks):
         self.email = email
@@ -22,8 +25,10 @@ class Claim:
             and self.email
             and self.weeks
         ):
-            return "INSERT INTO {} (email, weeks) VALUES ('{}', '{}')".format(
-                table_name, self.email, self.weeks
+            created_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            updated_at = created_at
+            return "INSERT INTO {} (email, weeks, created_at, updated_at) VALUES ('{}', '{}', '{}', '{}')".format(
+                table_name, self.email, self.weeks, created_at, updated_at
             )
 
         raise Exception("Cannot create SQL insert statement.")
