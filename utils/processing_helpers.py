@@ -22,3 +22,7 @@ def process_claim(
     # Update metadata in database.
     claim.updated_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     db_connection.update_row(claim)
+
+
+def convert_form_responses_to_claims():
+    return []
