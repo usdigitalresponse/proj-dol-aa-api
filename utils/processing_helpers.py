@@ -3,6 +3,9 @@ from database.db_connection import DatabaseConnection
 from models.claim import Claim
 from clients.notification.notification_client import NotificationClient, EmailArgs
 import datetime
+import random
+from urllib.parse import urlencode
+import os
 
 
 def process_claim(
@@ -12,8 +15,17 @@ def process_claim(
     email_args: EmailArgs,
 ):
     # TODO: Generate form link for each claim.
-    claim.form_url = "dummy.url/form"
-    email_args.html_content = "Please fill out this form: {}".format(claim.form_url)
+    demo_form = random.randint(0, 2)
+    params = dict()
+    if demo_form == 0 or demo_form == 2: params['week1'] = 'yes'
+    if demo_form == 1 or demo_form == 2: params['week2'] = 'yes'
+    params_str = urlencode(params)
+    
+    # TODO: Replace demo form with the complete form.
+    form_id = os.getenv("JOTFORM_FORM_ID")
+    claim.form_url = "https://form.jotform.com/{}".format(form_id)
+    email_args.html_content = "Please fill out this form: {}?{}".format(claim.form_url, params_str)
+    print (email_args.html_content)
 
     # Send email.
     claim.email_attempted_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")

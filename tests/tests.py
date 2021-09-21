@@ -6,6 +6,7 @@ from ingestion.csv_processor import CSVProcessor
 from database.db_connection import DatabaseConnection
 from models.claim import Claim, unpacking_func
 from utils.processing_helpers import process_claim
+from datetime import datetime
 
 
 def test_end_to_end():
@@ -43,6 +44,8 @@ def test_sengrid_client():
 def test_jotform_client():
     token = os.getenv("JOTFORM_API_KEY")
     jotform_client = JotformClient(token)
+    today = datetime.today().strftime('%Y-%m-%d')
+    jotform_client.fetch_responses(today)
 
 
 def test_notification_client():
@@ -80,7 +83,7 @@ def test_processing():
 
     # Seed database with fake rows.
     csv_processor = CSVProcessor(db_connection)
-    csv_processor.ingest(filepath="test_claims_real.csv")
+    csv_processor.ingest(filepath="tests/test_claims_real.csv")
 
     # Fetch unprocessed rows.
     claims = db_connection.fetch_unprocessed_rows(unpacking_func)
@@ -100,4 +103,4 @@ def test_processing():
 
 
 if __name__ == "__main__":
-    test_processing()
+    test_jotform_client()
