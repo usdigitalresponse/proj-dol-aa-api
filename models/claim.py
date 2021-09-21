@@ -3,7 +3,7 @@ import uuid
 
 
 class Claim:
-    def __init__(self, email, weeks, id=None):
+    def __init__(self, id=None, email=None, weeks=None):
         self.id = str(uuid.uuid4())
         if id:
             self.id = id
@@ -74,7 +74,7 @@ def unpacking_func(row):
     """
     Unpack a MySQL row (dictionary with keys as col names) into a claim object.
     """
-    claim = Claim(row["email"], row["weeks"], row["id"])
+    claim = Claim(id=row["id"], email=row["email"], weeks=row["weeks"])
 
     claim.form_url = row["form_url"]
     claim.is_delivered_successfully = row["is_delivered_successfully"]

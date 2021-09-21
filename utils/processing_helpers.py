@@ -7,6 +7,7 @@ import random
 from clients.form.jotform_client import JotformClient
 from urllib.parse import urlencode
 import os
+import datetime
 
 
 def process_claim(
@@ -44,10 +45,15 @@ def convert_form_responses_to_claims():
     today = datetime.today().strftime('%Y-%m-%d')
     submissions = jotform_client.fetch_responses(today)
 
+    claims = []
     for submission in submissions:
         id = [a for a in submission['answers'] if a['name'] == 'id']
-        id
-
+        
         # TODO: Do simple validation if we want to.
+        claim = Claim(id=id)
+        claim.response = submission
+        claim.response_received_at = submission['created_at']
+        claim.updated_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        claims.append(claim)
 
-    return []
+    return claims

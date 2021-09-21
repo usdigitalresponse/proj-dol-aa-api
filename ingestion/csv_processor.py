@@ -41,7 +41,7 @@ class CSVProcessor:
                         # TODO: process errors.
                         continue
                     row_number += 1
-                    claims.append(Claim(email, weeks))
+                    claims.append(Claim(email=email, weeks=weeks))
                 print("Rows processed: " + str(row_number))
 
             if not self.db_connection:
@@ -68,7 +68,7 @@ class CSVProcessor:
                     # TODO: process errors.
                     continue
                 row_number += 1
-                claims.append(Claim(email, weeks))
+                claims.append(Claim(email=email, weeks=weeks))
             print("Rows processed: " + str(row_number))
 
             if not self.db_connection:

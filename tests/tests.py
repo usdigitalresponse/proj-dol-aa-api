@@ -4,7 +4,7 @@ from clients.form.jotform_client import JotformClient
 import os
 from ingestion.csv_processor import CSVProcessor
 from database.db_connection import DatabaseConnection
-from models.claim import Claim, unpacking_func
+from models.claim import unpacking_func
 from utils.processing_helpers import process_claim
 from datetime import datetime
 from utils.exporting_helpers import claims_to_csv
@@ -126,4 +126,4 @@ def test_exporting_to_csv():
 
 
 if __name__ == "__main__":
-    test_ingestion()
+    test_jotform_client()
