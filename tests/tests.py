@@ -6,7 +6,11 @@ from ingestion.csv_processor import CSVProcessor
 from database.db_connection import DatabaseConnection
 from models.claim import Claim, unpacking_func
 from utils.processing_helpers import process_claim
+<<<<<<< HEAD
 from datetime import datetime
+=======
+from utils.exporting_helpers import claims_to_csv
+>>>>>>> 025724b8674cb61cf7148cd4b6afb43c35557d29
 
 
 def test_end_to_end():
@@ -102,5 +106,27 @@ def test_processing():
     db_connection.close()
 
 
+def test_pulling_form_responses():
+    pass
+
+
+def test_exporting_to_csv():
+    """
+    Test exporting all database records into CSV.
+    """
+    db_connection = DatabaseConnection()
+    db_connection.clear_table()
+
+    # Seed database with fake rows.
+    csv_processor = CSVProcessor(db_connection)
+    csv_processor.ingest(filepath="test_claims_real.csv")
+
+    # Fetch all claims.
+    claims = db_connection.fetch_all_rows(unpacking_func)
+
+    # Turn into CSV.
+    claims_to_csv(claims, "test_export.csv")
+
+
 if __name__ == "__main__":
-    test_jotform_client()
+    test_exporting_to_csv()
