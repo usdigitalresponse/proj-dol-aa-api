@@ -6,11 +6,8 @@ from ingestion.csv_processor import CSVProcessor
 from database.db_connection import DatabaseConnection
 from models.claim import Claim, unpacking_func
 from utils.processing_helpers import process_claim
-<<<<<<< HEAD
 from datetime import datetime
-=======
 from utils.exporting_helpers import claims_to_csv
->>>>>>> 025724b8674cb61cf7148cd4b6afb43c35557d29
 
 
 def test_end_to_end():
