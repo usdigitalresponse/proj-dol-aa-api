@@ -24,7 +24,8 @@ class DatabaseConnection:
 
     def write_row(self, model):
         with self.conn.cursor() as cur:
-            cur.execute(model.to_sql_insert_statement(table_name))
+            sql_statement = model.to_sql_insert_statement(table_name)
+            cur.execute(sql_statement)
         self.conn.commit()
         cur.close()
 
@@ -70,6 +71,7 @@ class DatabaseConnection:
             cur.execute(
                 """
                 CREATE TABLE claims (
+                    id VARCHAR(36) NOT NULL,
                     email VARCHAR(256) NOT NULL,
                     weeks VARCHAR(1024) NOT NULL,
 
@@ -82,7 +84,7 @@ class DatabaseConnection:
                     created_at DATETIME(6),
                     updated_at DATETIME(6),
 
-                    PRIMARY KEY (email)
+                    PRIMARY KEY (id)
                 )
                 """
             )

@@ -45,7 +45,7 @@ def test_sengrid_client():
 def test_jotform_client():
     token = os.getenv("JOTFORM_API_KEY")
     jotform_client = JotformClient(token)
-    today = datetime.today().strftime('%Y-%m-%d')
+    today = datetime.today().strftime("%Y-%m-%d")
     jotform_client.fetch_responses(today)
 
 
@@ -61,10 +61,10 @@ def test_ingestion():
     db_connection.clear_table()
 
     csv_processor = CSVProcessor(db_connection)
-    csv_processor.ingest(filepath="test_claims.csv")
+    csv_processor.ingest(filepath="test_claims_real.csv")
 
     rows = db_connection.fetch_all_rows(unpacking_func)
-    assert len(rows) == 3
+    assert len(rows) == 2
 
     db_connection.clear_table()
     db_connection.close()
@@ -126,4 +126,4 @@ def test_exporting_to_csv():
 
 
 if __name__ == "__main__":
-    test_exporting_to_csv()
+    test_ingestion()

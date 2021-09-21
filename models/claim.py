@@ -1,8 +1,12 @@
 import datetime
+import uuid
 
 
 class Claim:
-    def __init__(self, email, weeks):
+    def __init__(self, email, weeks, id=None):
+        self.id = str(uuid.uuid4())
+        if id:
+            self.id = id
         self.email = email
         self.weeks = weeks
         self.form_url = None
@@ -14,9 +18,14 @@ class Claim:
         self.updated_at = self.created_at
 
     def to_sql_insert_statement(self, table_name):
-        if self.email and self.weeks:
-            return "INSERT INTO {} (email, weeks, created_at, updated_at) VALUES ('{}', '{}', '{}', '{}')".format(
-                table_name, self.email, self.weeks, self.created_at, self.updated_at
+        if self.email and self.weeks and self.id:
+            return "INSERT INTO {} (id, email, weeks, created_at, updated_at) VALUES ('{}', '{}', '{}', '{}', '{}')".format(
+                table_name,
+                self.id,
+                self.email,
+                self.weeks,
+                self.created_at,
+                self.updated_at,
             )
 
         raise Exception("Cannot create SQL insert statement.")
@@ -53,8 +62,8 @@ class Claim:
             # This is a no-op update.
             return None
 
-        return "UPDATE {} SET {} WHERE email='{}'".format(
-            table_name, set_statement, self.email
+        return "UPDATE {} SET {} WHERE id='{}'".format(
+            table_name, set_statement, self.id
         )
 
     def __repr__(self):
@@ -65,7 +74,7 @@ def unpacking_func(row):
     """
     Unpack a MySQL row (dictionary with keys as col names) into a claim object.
     """
-    claim = Claim(row["email"], row["weeks"])
+    claim = Claim(row["email"], row["weeks"], row["id"])
 
     claim.form_url = row["form_url"]
     claim.is_delivered_successfully = row["is_delivered_successfully"]
