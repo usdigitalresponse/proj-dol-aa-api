@@ -116,7 +116,7 @@ def test_exporting_to_csv():
 
     # Seed database with fake rows.
     csv_processor = CSVProcessor(db_connection)
-    csv_processor.ingest(filepath="test_claims_real.csv")
+    csv_processor.ingest(filepath="tests/test_claims_real.csv")
 
     # Fetch all claims.
     claims = db_connection.fetch_all_rows(unpacking_func)
@@ -126,4 +126,4 @@ def test_exporting_to_csv():
 
 
 if __name__ == "__main__":
-    test_exporting_to_csv()
+    test_jotform_client()

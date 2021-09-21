@@ -4,6 +4,7 @@ from models.claim import Claim
 from clients.notification.notification_client import NotificationClient, EmailArgs
 import datetime
 import random
+from clients.form.jotform_client import JotformClient
 from urllib.parse import urlencode
 import os
 
@@ -19,6 +20,7 @@ def process_claim(
     params = dict()
     if demo_form == 0 or demo_form == 2: params['week1'] = 'yes'
     if demo_form == 1 or demo_form == 2: params['week2'] = 'yes'
+    params['id'] = claim.id
     params_str = urlencode(params)
     
     # TODO: Replace demo form with the complete form.
@@ -37,4 +39,15 @@ def process_claim(
 
 
 def convert_form_responses_to_claims():
+    token = os.getenv("JOTFORM_API_KEY")
+    jotform_client = JotformClient(token)
+    today = datetime.today().strftime('%Y-%m-%d')
+    submissions = jotform_client.fetch_responses(today)
+
+    for submission in submissions:
+        id = [a for a in submission['answers'] if a['name'] == 'id']
+        id
+
+        # TODO: Do simple validation if we want to.
+
     return []

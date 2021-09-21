@@ -53,12 +53,12 @@ class Claim:
             # This is a no-op update.
             return None
 
-        return "UPDATE {} SET {} WHERE email='{}'".format(
+        return "UPDATE {} SET {} WHERE id='{}'".format(
             table_name, set_statement, self.email
         )
 
     def __repr__(self):
-        return "Email: {}\n Weeks: {}\n".format(self.email, self.weeks)
+        return "ID: {}\n Email: {}\n Weeks: {}\n".format(self.id, self.email, self.weeks)
 
 
 def unpacking_func(row):
