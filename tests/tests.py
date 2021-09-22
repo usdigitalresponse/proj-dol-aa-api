@@ -4,8 +4,8 @@ from clients.form.jotform_client import JotformClient
 import os
 from ingestion.csv_processor import CSVProcessor
 from database.db_connection import DatabaseConnection
-from models.claim import unpacking_func
-from utils.processing_helpers import process_claim
+from models.claim import unpacking_func, Claim
+from utils.processing_helpers import process_claim, convert_form_responses_to_claims
 from datetime import datetime
 from utils.exporting_helpers import claims_to_csv
 
@@ -40,13 +40,6 @@ def test_sengrid_client():
 
     email_args = EmailArgs(recipient_emails, subject, html_content)
     sendgrid_client.send(email_args=email_args)
-
-
-def test_jotform_client():
-    token = os.getenv("JOTFORM_API_KEY")
-    jotform_client = JotformClient(token)
-    today = datetime.today().strftime("%Y-%m-%d")
-    jotform_client.fetch_responses(today)
 
 
 def test_notification_client():
@@ -104,7 +97,26 @@ def test_processing():
 
 
 def test_pulling_form_responses():
-    pass
+    """
+    Test pulling Jotform repsonses and writing them to appropriate row in database.
+    """
+    db_connection = DatabaseConnection()
+    db_connection.clear_table()
+
+    test_claim = Claim(id="1234", email="advith.chelikani@gmail.com", weeks="W01")
+    db_connection.write_row(test_claim)
+
+    token = os.getenv("JOTFORM_API_KEY")
+    jotform_client = JotformClient(token)
+    submissions = jotform_client.fetch_responses("2021-09-21")fe
+
+    claims = convert_form_responses_to_claims(submissions)
+
+    for claim in claims:
+        db_connection.update_row(claim)
+
+    # db_connection.clear_table()
+    db_connection.close()
 
 
 def test_exporting_to_csv():
@@ -124,6 +136,9 @@ def test_exporting_to_csv():
     # Turn into CSV.
     claims_to_csv(claims, "test_export.csv")
 
+    db_connection.clear_table()
+    db_connection.close()
+
 
 if __name__ == "__main__":
-    test_jotform_client()
+    test_pulling_form_responses()
