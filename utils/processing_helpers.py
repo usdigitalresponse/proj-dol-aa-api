@@ -31,7 +31,9 @@ def process_claim(
     # TODO: Replace demo form with the complete form.
     form_id = os.getenv("JOTFORM_FORM_ID")
     claim.form_url = "https://form.jotform.com/{}?{}".format(form_id, params_str)
-    email_args.html_content = "Please fill out this form: {}".format(claim.form_url)
+    email_args.html_content = "Hello,\nYou are receiving this email because we need more information from you about your benefits case.\nYou reported that you were not able or available to work for at least one week during which you were paid unemployment benefits.\nWe would like to verify that information. And, if you were indeed not able or available to work at some point, we would like to better understand why.\nPlease respond by September 30. Not responding by September 30 or responding untruthfully may negatively impact your benefits.\n<a href='{}'>Fill out the form</a>\nThank you,\nThe VT Department of Labor".format(
+        claim.form_url
+    )
     print(email_args.html_content)
 
     # Send email.
