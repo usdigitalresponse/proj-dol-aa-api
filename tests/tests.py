@@ -8,6 +8,7 @@ from models.claim import unpacking_func
 from utils.processing_helpers import process_claim
 from datetime import datetime
 from utils.exporting_helpers import claims_to_csv
+from utils.secrets import get_jotform_api_key
 
 
 def test_end_to_end():
@@ -43,7 +44,8 @@ def test_sengrid_client():
 
 
 def test_jotform_client():
-    token = os.getenv("JOTFORM_API_KEY")
+    token = get_jotform_api_key()
+
     jotform_client = JotformClient(token)
     today = datetime.today().strftime("%Y-%m-%d")
     jotform_client.fetch_responses(today)

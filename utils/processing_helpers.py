@@ -8,6 +8,7 @@ from clients.form.jotform_client import JotformClient
 from urllib.parse import urlencode
 import os
 import datetime
+from utils.secrets import get_jotform_api_key
 
 
 def process_claim(
@@ -40,7 +41,7 @@ def process_claim(
 
 
 def convert_form_responses_to_claims():
-    token = os.getenv("JOTFORM_API_KEY")
+    token = get_jotform_api_key()
     jotform_client = JotformClient(token)
     today = datetime.today().strftime('%Y-%m-%d')
     submissions = jotform_client.fetch_responses(today)
