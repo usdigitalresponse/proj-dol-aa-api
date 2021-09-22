@@ -15,8 +15,9 @@ from utils.processing_helpers import convert_form_responses_to_claims
 from utils.exporting_helpers import claims_to_csv
 from models.claim import Claim, unpacking_func
 import datetime
+import pytz
 
-EXPORTS_BUCKET = "ui-claimant-exports"
+EXPORTS_BUCKET = "ui-claimant-downloads"
 
 s3 = boto3.resource("s3")
 
@@ -28,7 +29,7 @@ def lambda_handler(event, context):
 
         token = os.getenv("JOTFORM_API_KEY")
         jotform_client = JotformClient(token)
-        today = datetime.today().strftime("%Y-%m-%d")
+        today = datetime.datetime.now(pytz.timezone("US/Eastern")).strftime("%Y-%m-%d")
         submissions = jotform_client.fetch_responses(today)
         claims = convert_form_responses_to_claims(submissions)
 

@@ -9,6 +9,7 @@ from utils.processing_helpers import process_claim, convert_form_responses_to_cl
 from datetime import datetime
 from utils.exporting_helpers import claims_to_csv
 from utils.secrets import get_jotform_api_key
+import pytz
 
 
 def test_end_to_end():
@@ -104,12 +105,24 @@ def test_pulling_form_responses():
     db_connection = DatabaseConnection()
     db_connection.clear_table()
 
-    test_claim = Claim(id="1234", email="advith.chelikani@gmail.com", weeks="W01")
+    test_claim = Claim(
+        id="7e1f8b8a-f2a3-4cee-85fd-aefa949a3327",
+        email="robert.km.eng@gmail.com",
+        weeks="W01",
+    )
+    db_connection.write_row(test_claim)
+
+    test_claim = Claim(
+        id="7e1d4db4-36b0-43a5-bcd6-eda2812debb4",
+        email="advith.chelikani@gmail.com",
+        weeks="W01",
+    )
     db_connection.write_row(test_claim)
 
     token = os.getenv("JOTFORM_API_KEY")
     jotform_client = JotformClient(token)
-    submissions = jotform_client.fetch_responses("2021-09-21")fe
+    today = datetime.now(pytz.timezone("US/Eastern")).strftime("%Y-%m-%d")
+    submissions = jotform_client.fetch_responses(today)
 
     claims = convert_form_responses_to_claims(submissions)
 

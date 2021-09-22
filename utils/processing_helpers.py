@@ -30,10 +30,8 @@ def process_claim(
 
     # TODO: Replace demo form with the complete form.
     form_id = os.getenv("JOTFORM_FORM_ID")
-    claim.form_url = "https://form.jotform.com/{}".format(form_id)
-    email_args.html_content = "Please fill out this form: {}?{}".format(
-        claim.form_url, params_str
-    )
+    claim.form_url = "https://form.jotform.com/{}?{}".format(form_id, params_str)
+    email_args.html_content = "Please fill out this form: {}".format(claim.form_url)
     print(email_args.html_content)
 
     # Send email.
