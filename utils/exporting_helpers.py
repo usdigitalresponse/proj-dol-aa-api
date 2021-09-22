@@ -2,6 +2,8 @@ import csv
 from typing import List
 from models.claim import Claim
 
+EXCLUDED_COLUMNS = ["id"]
+
 
 def claims_to_csv(claims: List[Claim], filepath: str):
     counter = 0
@@ -11,6 +13,8 @@ def claims_to_csv(claims: List[Claim], filepath: str):
         for claim in claims:
             for key, value in claim.__dict__.items():
                 if not key.startswith("__") and not callable(key):
+                    if key in EXCLUDED_COLUMNS:
+                        continue
                     row[key] = value
 
             # For first row, print out values too as header row.

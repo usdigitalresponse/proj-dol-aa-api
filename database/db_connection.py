@@ -79,7 +79,7 @@ class DatabaseConnection:
                     is_delivered_successfully TINYINT(1),
                     email_attempted_at DATETIME(6),
                     response_received_at DATETIME(6),
-                    response BLOB,
+                    response TEXT,
 
                     created_at DATETIME(6),
                     updated_at DATETIME(6),

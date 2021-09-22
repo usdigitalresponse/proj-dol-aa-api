@@ -67,7 +67,9 @@ class Claim:
         )
 
     def __repr__(self):
-        return "ID: {}\n Email: {}\n Weeks: {}\n".format(self.id, self.email, self.weeks)
+        return "ID: {}\n Email: {}\n Weeks: {}\n".format(
+            self.id, self.email, self.weeks
+        )
 
 
 def unpacking_func(row):

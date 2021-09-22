@@ -6,12 +6,15 @@ It will update the metadata on these rows of the database.
 """
 from ingestion.csv_processor import CSVProcessor
 import json
+import os
 import boto3
 from database.db_connection import DatabaseConnection
 from clients.form.form_client import FormClient
+from clients.form.jotform_client import JotformClient
 from utils.processing_helpers import convert_form_responses_to_claims
 from utils.exporting_helpers import claims_to_csv
 from models.claim import Claim, unpacking_func
+import datetime
 
 EXPORTS_BUCKET = "ui-claimant-exports"
 
@@ -23,11 +26,11 @@ def lambda_handler(event, context):
         db_connection = DatabaseConnection(is_test=False)
         num_entries = 0
 
-        # TODO: Call Form API to collect repsonses.
-        # token = "<token>"
-        # form_client = FormClient(token)
-        # form_client.get_response(timedelta=24)
-        claims = convert_form_responses_to_claims()
+        token = os.getenv("JOTFORM_API_KEY")
+        jotform_client = JotformClient(token)
+        today = datetime.today().strftime("%Y-%m-%d")
+        submissions = jotform_client.fetch_responses(today)
+        claims = convert_form_responses_to_claims(submissions)
 
         for claim in claims:
             db_connection.update_row(claim)
