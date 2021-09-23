@@ -1,5 +1,6 @@
 import datetime
 import uuid
+import json
 
 
 class Claim:
@@ -82,7 +83,7 @@ def unpacking_func(row):
     claim.is_delivered_successfully = row["is_delivered_successfully"]
     claim.email_attempted_at = row["email_attempted_at"]
     claim.response_received_at = row["response_received_at"]
-    claim.response = row["response"]
+    claim.response = json.loads(row["response"])
     claim.created_at = row["created_at"]
     claim.updated_at = row["updated_at"]
     return claim

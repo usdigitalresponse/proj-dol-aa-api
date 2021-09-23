@@ -22,9 +22,9 @@ def process_claim(
     demo_form = random.randint(0, 2)
     params = dict()
     if demo_form == 0 or demo_form == 2:
-        params["week1"] = "yes"
+        params["w1"] = "yes"
     if demo_form == 1 or demo_form == 2:
-        params["week2"] = "yes"
+        params["w2"] = "yes"
     params["id"] = claim.id
     params_str = urlencode(params)
 
