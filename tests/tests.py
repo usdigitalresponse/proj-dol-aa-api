@@ -7,7 +7,7 @@ from database.db_connection import DatabaseConnection
 from models.claim import unpacking_func, Claim
 from utils.processing_helpers import process_claim, convert_form_responses_to_claims
 from datetime import datetime
-from utils.exporting_helpers import claims_to_csv
+from utils.exporting_helpers import claims_to_csv, response_to_csv
 from utils.secrets import get_jotform_api_key
 import pytz
 
@@ -132,6 +132,14 @@ def test_pulling_form_responses():
     # db_connection.clear_table()
     db_connection.close()
 
+def test_convert_responses_to_csv_columns():
+    token = os.getenv("JOTFORM_API_KEY")
+    jotform_client = JotformClient(token)
+    today = datetime.now(pytz.timezone("US/Eastern")).strftime("%Y-%m-%d")
+    submissions = jotform_client.fetch_responses(today)
+    for submission in submissions:
+        response_to_csv(submission)
+
 
 def test_exporting_to_csv():
     """
@@ -155,4 +163,4 @@ def test_exporting_to_csv():
 
 
 if __name__ == "__main__":
-    test_pulling_form_responses()
+    test_convert_responses_to_csv_columns()
