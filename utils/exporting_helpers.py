@@ -2,7 +2,7 @@ import csv
 from typing import List
 from models.claim import Claim
 
-EXCLUDED_COLUMNS = ["id"]
+EXCLUDED_COLUMNS = ["id", "is_delivered_successfully"]
 
 
 def claims_to_csv(claims: List[Claim], filepath: str):
