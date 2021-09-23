@@ -10,13 +10,15 @@ def claims_to_csv(claims: List[Claim], filepath: str):
     counter = 0
     with open(filepath, "w") as csvfile:
         writer = csv.writer(csvfile)
-        row = {}
         for claim in claims:
+            row = {}
             for key, value in claim.__dict__.items():
                 if not key.startswith("__") and not callable(key):
                     if key in EXCLUDED_COLUMNS:
                         continue
                     elif key == "response":
+                        if value is None:
+                            continue
                         questions, answers = clean_response_for_csv(value)
                         for q, a in zip(questions, answers):
                             row[q] = a
