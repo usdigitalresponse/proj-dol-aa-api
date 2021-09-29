@@ -26,6 +26,7 @@ def process_claim(
     if demo_form == 1 or demo_form == 2:
         params["w2"] = "yes"
     params["id"] = claim.id
+    params["email"] = email_args.recipient_emails[0]
     params_str = urlencode(params)
 
     # TODO: Replace demo form with the complete form.
