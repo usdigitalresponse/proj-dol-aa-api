@@ -134,12 +134,18 @@ def test_pulling_form_responses():
 
 
 def test_convert_responses_to_csv_columns():
-    token = os.getenv("JOTFORM_API_KEY")
-    jotform_client = JotformClient(token)
-    today = datetime.now(pytz.timezone("US/Eastern")).strftime("%Y-%m-%d")
-    submissions = jotform_client.fetch_responses(today)
-    for submission in submissions:
-        clean_response_for_csv(submission)
+    # submissions = jotform_client.fetch_responses(today)
+    # print(submissions)
+    # # for submission in submissions:
+    # #     header, row = clean_response_for_csv(submission)
+    # #     # print(header, row)
+
+    db_connection = DatabaseConnection(is_test=False)
+    claims = db_connection.fetch_all_rows(unpacking_func)
+
+    claims_to_csv(claims, "test.csv")
+
+    db_connection.close()
 
 
 def test_exporting_to_csv():
@@ -164,4 +170,4 @@ def test_exporting_to_csv():
 
 
 if __name__ == "__main__":
-    test_exporting_to_csv()
+    test_convert_responses_to_csv_columns()
