@@ -3,7 +3,7 @@ from typing import List
 from models.claim import Claim
 import re
 
-EXCLUDED_COLUMNS = ["id", "is_delivered_successfully"]
+EXCLUDED_COLUMNS = ["id", "is_delivered_successfully", "created_at", "updated_at"]
 CSV_COLUMNS = [
     ("email", "Email"),
     ("weeks", "Weeks"),
@@ -16,8 +16,6 @@ CSV_COLUMNS = [
     ("week_01_17_21_available", "Available, Week of 1/17/21"),
     ("week_01_24_21_able", "Able, Week of 1/24/21"),
     ("week_01_24_21_available", "Available, Week of 1/24/21"),
-    ("created_at", "Created (Time)"),
-    ("updated_at", "Updated (Time)"),
     ("is_always_able_and_available", "Is Always Able and Available"),
 ]
 
@@ -75,6 +73,12 @@ def clean_response_for_csv(response):
         elif re.match(r"week_\d{1,2}_\d{2}_\d{2}_available", name) != None:
             row.append(answer)
         elif re.match(r"covid_\d{1,2}_\d{2}_\d{2}", name) != None:
+            # Checkbox answers are the array of the option selected.
+            # We want to parse them just as yes or no.
+            if "answer" in answer:
+                answer["answer"] = "Yes"
+            else:
+                answer["answer"] = "No"
             row.append(answer)
 
     row = sorted(row, key=lambda x: x["name"])
