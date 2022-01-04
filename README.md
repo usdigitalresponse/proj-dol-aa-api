@@ -1,3 +1,6 @@
+⚠️ **This project is not actively maintained!** ⚠️ The repository is preserved here for future reference or to fork and make use of, but it is not receiving active bugfixes or security updates.
+
+
 # USDR Unemployment Insurance Hosted Solution
 
 ## Setup
